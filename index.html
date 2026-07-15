@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>João Vítor — Automação de Dados para Telecom e Vendas</title>
+<meta name="description" content="Desenvolvo sistemas em Python que transformam processos manuais de dados em pipelines automáticos: validação de bases, qualificação de telefones e distribuição de mailings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1B2A;        /* navy profundo */
+    --ink-soft:#33465A;
+    --mute:#5E7186;
+    --paper:#FFFFFF;
+    --card:#F2F5F8;
+    --line:#DCE4EB;
+    --green:#00C389;      /* acento — usar com moderação */
+    --green-dk:#00795A;
+    --term-bg:#0A1420;
+    --term-line:#16283C;
+    --radius:14px;
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--green-dk);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--green-dk);letter-spacing:.02em}
+  .eyebrow::before{content:"$ ";color:var(--green)}
+  h1,h2,h3{font-family:var(--display);line-height:1.15;letter-spacing:-.01em}
+  section{padding:88px 0}
+
+  /* ===== header ===== */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:var(--mono);font-weight:700;font-size:.95rem}
+  .logo span{color:var(--green-dk)}
+  .nav-links{display:flex;gap:28px;align-items:center;font-size:.92rem;font-weight:500;color:var(--ink-soft)}
+  .nav-links a:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.95rem;padding:12px 22px;border-radius:10px;transition:transform .15s ease,box-shadow .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{box-shadow:0 8px 20px rgba(13,27,42,.25)}
+  .btn-ghost{border:1.5px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-wa{background:var(--green-dk);color:#fff}
+  .nav .btn{padding:9px 18px;font-size:.88rem}
+
+  /* ===== hero ===== */
+  .hero{padding:96px 0 72px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(2.2rem,4.6vw,3.4rem);font-weight:700;margin:18px 0 20px}
+  .hero h1 em{font-style:normal;color:var(--green-dk)}
+  .hero p.lead{font-size:1.12rem;color:var(--mute);max-width:34rem;margin-bottom:32px}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+
+  /* terminal — elemento assinatura */
+  .term{background:var(--term-bg);border-radius:var(--radius);box-shadow:0 24px 60px rgba(13,27,42,.35);overflow:hidden;border:1px solid var(--term-line)}
+  .term-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--term-line)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot:nth-child(1){background:#FF5F57}.dot:nth-child(2){background:#FEBC2E}.dot:nth-child(3){background:#28C840}
+  .term-title{margin-left:8px;font-family:var(--mono);font-size:.72rem;color:#5E7186}
+  .term-body{padding:20px 20px 24px;font-family:var(--mono);font-size:.82rem;line-height:1.85;min-height:270px;color:#AFC3D6}
+  .term-body .ok{color:var(--green)}
+  .term-body .cmd{color:#E8F0F8}
+  .term-body .dim{color:#54687D}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--green);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ===== trajetória ===== */
+  .path{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .path h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:14px 0 8px}
+  .path .sub{color:var(--mute);max-width:40rem}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:44px;counter-reset:step}
+  .step{position:relative;padding:0 20px 0 0}
+  .step::before{counter-increment:step;content:counter(step,decimal-leading-zero);font-family:var(--mono);font-weight:700;font-size:.8rem;color:var(--green-dk)}
+  .step::after{content:"";position:absolute;top:9px;left:34px;right:14px;height:1.5px;background:var(--line)}
+  .step:last-child::after{display:none}
+  .step h3{font-size:1rem;margin:12px 0 6px}
+  .step p{font-size:.86rem;color:var(--mute)}
+  .step.now h3{color:var(--green-dk)}
+
+  /* ===== projetos ===== */
+  .projects h2{font-size:clamp(1.7rem,3.2vw,2.4rem);margin:14px 0 10px}
+  .projects .sub{color:var(--mute);max-width:44rem;margin-bottom:52px}
+  .proj{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;padding:44px 0}
+  .proj + .proj{border-top:1px solid var(--line)}
+  .proj:nth-child(even) .proj-media{order:2}
+  .proj-media{background:var(--term-bg);border-radius:var(--radius);padding:22px;border:1px solid var(--term-line)}
+  .proj-media img{border-radius:8px;width:100%;height:auto}
+  .proj-tag{font-family:var(--mono);font-size:.75rem;color:var(--green-dk);font-weight:500}
+  .proj h3{font-size:1.5rem;margin:10px 0 12px}
+  .proj p.desc{color:var(--mute);font-size:.98rem;margin-bottom:18px}
+  .proj ul{list-style:none;margin-bottom:22px}
+  .proj li{position:relative;padding-left:22px;font-size:.93rem;margin-bottom:9px;color:var(--ink-soft)}
+  .proj li::before{content:"▸";position:absolute;left:0;color:var(--green-dk)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:.74rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:5px 11px;color:var(--ink-soft)}
+
+  /* ===== método / serviços ===== */
+  .method{background:var(--ink);color:#fff}
+  .method .eyebrow{color:var(--green)}
+  .method h2{font-size:clamp(1.7rem,3.2vw,2.4rem);margin:14px 0 10px;color:#fff}
+  .method .sub{color:#AFC3D6;max-width:44rem;margin-bottom:52px}
+  .method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .mcard{background:var(--term-bg);border:1px solid var(--term-line);border-radius:var(--radius);padding:30px 26px}
+  .mcard .mono-h{font-family:var(--mono);font-size:.82rem;color:var(--green);font-weight:700;margin-bottom:14px}
+  .mcard h3{font-size:1.12rem;margin-bottom:10px;color:#fff}
+  .mcard p{font-size:.9rem;color:#AFC3D6}
+
+  /* ===== contato ===== */
+  .contact{text-align:center}
+  .contact h2{font-size:clamp(1.8rem,3.4vw,2.6rem);margin:16px 0 14px}
+  .contact p{color:var(--mute);max-width:36rem;margin:0 auto 34px}
+  .contact-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;font-size:.85rem;color:var(--mute)}
+  .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .foot .mono{font-family:var(--mono);font-size:.78rem}
+  .social-links{display:flex;gap:18px;font-weight:600;color:var(--ink-soft)}
+  .social-links a:hover{color:var(--green-dk)}
+
+  @media(prefers-reduced-motion:reduce){
+    .cursor{animation:none}
+    html{scroll-behavior:auto}
+    .btn:hover{transform:none}
+  }
+  @media(max-width:900px){
+    section{padding:64px 0}
+    .hero{padding:56px 0 48px}
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .steps{grid-template-columns:1fr;gap:26px}
+    .step::after{display:none}
+    .proj{grid-template-columns:1fr;gap:28px}
+    .proj:nth-child(even) .proj-media{order:0}
+    .method-grid{grid-template-columns:1fr;gap:16px}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">joao<span>@</span>automacao:~$</a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#trajetoria">Trajetória</a>
+      <a href="#projetos">Projetos</a>
+      <a href="#metodo">Como trabalho</a>
+      <a class="btn btn-primary" href="#contato">Fale comigo</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">automacao_de_dados --telecom --vendas</span>
+      <h1>Transformo processo manual em <em>sistema</em>.</h1>
+      <p class="lead">Desenvolvo em Python as ferramentas que uma operação de vendas precisa e não tem: validação de bases, qualificação de telefones e distribuição de mailings — o que levava horas passa a rodar em minutos.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-wa" href="SEU_LINK_WHATSAPP" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+        <a class="btn btn-ghost" href="#projetos">Ver projetos</a>
+      </div>
+    </div>
+    <div class="term" aria-label="Simulação de terminal mostrando um pipeline de dados em execução">
+      <div class="term-bar" aria-hidden="true">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">joao@operacao: ~/pipeline</span>
+      </div>
+      <div class="term-body" id="term"><span class="cursor"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TRAJETÓRIA ============ -->
+<section class="path" id="trajetoria">
+  <div class="wrap">
+    <span class="eyebrow">carreira --linha_do_tempo</span>
+    <h2>De vendedor à equipe de inteligência</h2>
+    <p class="sub">Cada etapa da minha trajetória em uma operadora de internet (parceira Vivo) foi um degrau técnico — e cada gargalo que encontrei virou um sistema.</p>
+    <div class="steps">
+      <div class="step"><h3>Vendas</h3><p>Entrei como vendedor e em duas semanas fui promovido para o administrativo.</p></div>
+      <div class="step"><h3>Discadora</h3><p>Gestão da operação de discagem e das bases de contato do time comercial.</p></div>
+      <div class="step"><h3>Excel avançado</h3><p>Relatórios operacionais com fórmulas avançadas e consolidação de dados.</p></div>
+      <div class="step"><h3>Sistemas</h3><p>Automação dos processos manuais com aplicações próprias em Python.</p></div>
+      <div class="step now"><h3>Inteligência</h3><p>Hoje na equipe de inteligência, responsável por mailings e atualização de bases.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJETOS ============ -->
+<section class="projects" id="projetos">
+  <div class="wrap">
+    <span class="eyebrow">listar --projetos</span>
+    <h2>Sistemas construídos para operação real</h2>
+    <p class="sub">Três ferramentas nascidas de problemas reais: validar → qualificar → distribuir. Todas rodam 100% localmente, sem enviar dados a serviços externos.</p>
+
+    <article class="proj">
+      <div>
+        <span class="proj-tag">// projeto 01</span>
+        <h3>GPON Processor</h3>
+        <p class="desc">Bases enormes chegam com colunas fora de padrão e registros inválidos. O GPON Processor trata e valida bases para consulta de cobertura sem depender de internet.</p>
+        <ul>
+          <li>Detecta colunas de CNPJ, CEP, número e endereço automaticamente</li>
+          <li>Normaliza, valida e descarta registros fora dos critérios</li>
+          <li>Processa em blocos e divide saídas acima de 200 mil linhas</li>
+        </ul>
+        <div class="chips"><span class="chip">python</span><span class="chip">pandas</span><span class="chip">web local</span><span class="chip">offline</span></div>
+      </div>
+      <div class="proj-media"><img src="./img/gpon.jpeg" alt="Interface do GPON Processor, estilo terminal, mostrando o status do processamento" decoding="async"></div>
+    </article>
+
+    <article class="proj">
+      <div>
+        <span class="proj-tag">// projeto 02</span>
+        <h3>Qualificador de Telefones</h3>
+        <p class="desc">Listas de contatos misturam celulares, fixos, 0800 e lixo. O Qualificador limpa e classifica bases telefônicas brasileiras, prontas para campanhas e discadores.</p>
+        <ul>
+          <li>Classifica móvel, fixo, sem DDD, especial e inválido com validação de DDDs</li>
+          <li>Três interfaces: painel web, desktop e terminal</li>
+          <li>Exportação adaptativa em Excel ou CSV + relatório estatístico</li>
+        </ul>
+        <div class="chips"><span class="chip">python</span><span class="chip">pandas</span><span class="chip">flask</span><span class="chip">tkinter</span><span class="chip">js</span></div>
+      </div>
+      <div class="proj-media"><img src="./img/qualifica.png" alt="Painel web Qualifica com indicadores de telefones processados e área de upload" decoding="async"></div>
+    </article>
+
+    <article class="proj">
+      <div>
+        <span class="proj-tag">// projeto 03</span>
+        <h3>Radar de Cidades</h3>
+        <p class="desc">Dezenas de planilhas heterogêneas viram bases limpas, separadas por cidade e distribuídas em lotes prontos para o time de vendas.</p>
+        <ul>
+          <li>ETL completo: leitura recursiva, deduplicação e bloqueio de clientes já vendidos</li>
+          <li>Excel formatado por cidade com filtros e cabeçalho congelado</li>
+          <li>API HTTP e painel web construídos só com a biblioteca padrão do Python</li>
+        </ul>
+        <div class="chips"><span class="chip">python</span><span class="chip">openpyxl</span><span class="chip">stdlib http</span><span class="chip">threading</span></div>
+      </div>
+      <div class="proj-media"><img src="./img/radar.png" alt="Painel Radar de Cidades com monitoramento de volumes por cidade em tempo real" decoding="async"></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ MÉTODO ============ -->
+<section class="method" id="metodo">
+  <div class="wrap">
+    <span class="eyebrow">metodo --3_passos</span>
+    <h2>Sua operação também roda em planilhas?</h2>
+    <p class="sub">O mesmo método que apliquei em telecom funciona em qualquer operação que dependa de dados. Trabalho por projeto, para empresas da região ou remoto.</p>
+    <div class="method-grid">
+      <div class="mcard">
+        <div class="mono-h">[1] mapear</div>
+        <h3>Entendo o processo de verdade</h3>
+        <p>Sento com quem executa, mapeio cada etapa manual e identifico onde o tempo e os erros estão escapando.</p>
+      </div>
+      <div class="mcard">
+        <div class="mono-h">[2] automatizar</div>
+        <h3>Construo o pipeline</h3>
+        <p>Desenvolvo o sistema em Python: leitura, validação, tratamento e exportação — testado com os dados reais da sua operação.</p>
+      </div>
+      <div class="mcard">
+        <div class="mono-h">[3] entregar</div>
+        <h3>Ferramenta que o time usa</h3>
+        <p>Painel simples, botão de duplo clique, relatórios prontos. Feito para quem não é técnico usar sem depender de mim.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTATO ============ -->
+<section class="contact" id="contato">
+  <div class="wrap">
+    <span class="eyebrow">iniciar --conversa</span>
+    <h2>Vamos automatizar o seu processo?</h2>
+    <p>Me conta qual planilha toma mais tempo do seu time. A primeira conversa é para entender o problema — sem compromisso.</p>
+    <div class="contact-ctas">
+      <a class="btn btn-wa" href="SEU_LINK_WHATSAPP" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-primary" href="https://www.linkedin.com/in/joao-vitor-da-silva-7ab679344" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="btn btn-ghost" href="https://github.com/jvdsilva232-cmd" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 João Vítor — Automação de dados e sistemas operacionais</span>
+    <div class="social-links" aria-label="Redes profissionais">
+      <a href="https://www.linkedin.com/in/joao-vitor-da-silva-7ab679344" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://github.com/jvdsilva232-cmd" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const lines = [
+    {t:"$ ", c:"dim"}, {t:"python separador_cidade.py --cli\n", c:"cmd"},
+    {t:"lendo entrada_bruta/ ...........", c:""}, {t:" 432 arquivos (759,8 MB)\n", c:"ok"},
+    {t:"detectando colunas .............", c:""}, {t:" cidade, telefone, cpf/cnpj\n", c:"ok"},
+    {t:"validando telefones BR .........", c:""}, {t:" 6.781 números únicos\n", c:"ok"},
+    {t:"removendo duplicados ...........", c:""}, {t:" ok\n", c:"ok"},
+    {t:"bloqueando clientes vendidos ...", c:""}, {t:" ok\n", c:"ok"},
+    {t:"gerando XLSX por cidade ........", c:""}, {t:" 14 cidades\n", c:"ok"},
+    {t:"\nconcluído em 00:00:12 — horas de trabalho manual: 0\n", c:"cmd"},
+    {t:"$ ", c:"dim"}
+  ];
+  const el = document.getElementById('term');
+  const cursor = el.querySelector('.cursor');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function render(upTo, partial){
+    let html = "";
+    for(let i=0;i<upTo;i++){ html += '<span class="'+lines[i].c+'">'+lines[i].t.replace(/\n/g,"<br>")+'</span>'; }
+    if(partial) html += '<span class="'+lines[upTo].c+'">'+partial.replace(/\n/g,"<br>")+'</span>';
+    el.innerHTML = html;
+    el.appendChild(cursor);
+  }
+  if(reduced){ render(lines.length, null); return; }
+
+  let li = 0;
+  function typeLine(){
+    if(li >= lines.length) return;
+    const line = lines[li]; let ch = 0;
+    const speed = line.c === "cmd" ? 26 : 8;
+    (function tick(){
+      ch++;
+      render(li, line.t.slice(0, ch));
+      if(ch < line.t.length){ setTimeout(tick, speed); }
+      else { li++; setTimeout(typeLine, line.c === "" ? 60 : 220); }
+    })();
+  }
+  setTimeout(typeLine, 500);
+})();
+</script>
+</body>
+</html>
